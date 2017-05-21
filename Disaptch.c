@@ -35,7 +35,7 @@ void my_signal_handler( int signum, siginfo_t* info, void* ptr)
 }
 
 int main(int argc, char** argv){
-	if(argc != 2){
+	if(argc != 3){
 		printf("Wrong arguments");
 		return -1;
 	}
@@ -89,7 +89,8 @@ int main(int argc, char** argv){
 			return -1;
 		}
 		else{
-			//sleep(3);//maybe not needed
+			int status;
+			wait(&status);
 			continue;
 		}
 	}

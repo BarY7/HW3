@@ -53,8 +53,6 @@ int main(int argc, char** argv){
     	return errno;
     }
 
-      //TODO scary...
-      kill(ppid, SIGUSR1);
       size_t wrote = write(fdPipe,&counter , 1 );
       if(wrote < sizeof(counter)){
     	  printf("didnt write all\n");
@@ -64,6 +62,8 @@ int main(int argc, char** argv){
       	printf(OP_ERR, strerror( errno ));
       	return errno;
       }
+      //TODO works?>
+      kill(ppid, SIGUSR1);
       sleep(1);
 
       munmap(arr, length);
