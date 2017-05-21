@@ -28,7 +28,7 @@ void my_signal_handler( int signum, siginfo_t* info, void* ptr)
     char* cRead = malloc(sizeof(int));
     int countRead = read(fdPipe,cRead,1);
     if(countRead < 0){
-		printf("Read has failed on the file: %s\n", strerror( errno )); //TODO trouble?
+		printf("Read has failed on the file: %s\n , I read : %d", strerror( errno ),countRead); //TODO trouble?
 		return;
     }
     int amount = atoi(cRead);
@@ -76,7 +76,7 @@ int main(int argc, char** argv){
 		pid_t cpid = fork();
 		char* length = malloc(sizeof(length));
 		char* offset = malloc(sizeof(off_t));
-		if(i == 16){
+		if(i == 15){
 			sprintf(length,"%ld",(long) N - (Q-1)* K);
 		}
 		else{
@@ -85,6 +85,7 @@ int main(int argc, char** argv){
 			sprintf(offset,"%ld",(long) i * K);
 		if(cpid == 0) // child
 		{
+			printf("Proccess %d. My parametrs are: %s %s %s %s \n",(int)getpid(), argv[1], argv[2] , offset, length );
 			char *argvv[] = {"Counter.c", argv[1], argv[2] , offset, length, NULL};
 			execv("./coun",argvv);
 			printf("execv failed: %s\n", strerror(errno));

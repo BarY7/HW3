@@ -47,7 +47,7 @@ int main(int argc, char** argv){
     pid_t ppid = getppid();
     char* pipeName = malloc(14 + sizeof(pid_t));//TODO ok?
     sprintf(pipeName, "//tmp//counter_%d" , (int) proid); //TODO double //?
-    size_t fdPipe = mkfifo(pipeName, O_WRONLY);
+    size_t fdPipe = mkfifo(pipeName, O_RDWR);
     if(fdPipe < 0){
     	printf(OP_ERR, strerror( errno ));
     	return errno;
