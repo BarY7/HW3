@@ -31,43 +31,47 @@ int main(int argc, char** argv){
 		return -1;
 	}
 
-    char* arr = (char*)mmap(NULL, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, offset); //check protetctiond TODO
-    if (arr == MAP_FAILED) {
+	char* arr = (char*)mmap(NULL, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, offset); //check protetctiond TODO
+	if (arr == MAP_FAILED) {
 		printf("Error mmapping the file: %s\n", strerror(errno));
 		return -1;
-    }
+	}
 
-    for(int i=0; i<length; i++){
-    	if(arr[i] == counc){
-    		counter++;
-    	}
-    }
+	for(int i=0; i<length; i++){
+		if(arr[i] == counc){
+			counter++;
+		}
+	}
 
-    pid_t proid = getpid();
-    pid_t ppid = getppid();
-    char* pipeName = malloc(14 + sizeof(pid_t));//TODO ok?
-    sprintf(pipeName, "//tmp//counter_%d" , (int) proid); //TODO double //?
-    size_t fdPipe = mkfifo(pipeName, 0777);
-    if(fdPipe < 0){
-    	printf(OP_ERR, strerror( errno ));
-    	return errno;
-    }
+	pid_t proid = getpid();
+	pid_t ppid = getppid();
+	char* pipeName = malloc(14 + sizeof(pid_t));//TODO ok?
+	sprintf(pipeName, "//tmp//counter_%d" , (int) proid); //TODO double //?
+	size_t fdPipe = mkfifo(pipeName, 0777);
+	if(fdPipe < 0){
+		printf(OP_ERR, strerror( errno ));
+		return errno;
+	}
+	int didopen = open(pipeName,O_WRONLY);
+	if(didopen < 0){
+		printf("Error opening pipe for writing: %s\n", strerror(errno));
+		return -1;
+	}
+	size_t wrote = write(fdPipe,&counter , 1 );
+	if(wrote < sizeof(counter)){
+		printf("didnt write all, wrote: %d \n", (int) fdPipe);
+		return -1;
+	}
+	if(wrote < 0){
+		printf(OP_ERR, strerror( errno ));
+		return errno;
+	}
+	sleep(1);
 
-      size_t wrote = write(fdPipe,&counter , 1 );
-      if(wrote < sizeof(counter)){
-    	  printf("didnt write all, wrote: %d \n", (int) fdPipe);
-    	  return -1;
-      }
-      if(wrote < 0){
-      	printf(OP_ERR, strerror( errno ));
-      	return errno;
-      }
-      sleep(1);
-
-      munmap(arr, length);
-      close(fd);
-      close(fdPipe);
-      unlink(pipeName);
-      free(pipeName);
-      return 1;
+	munmap(arr, length);
+	close(fd);
+	close(fdPipe);
+	unlink(pipeName);
+	free(pipeName);
+	return 1;
 }
