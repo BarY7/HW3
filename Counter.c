@@ -55,7 +55,7 @@ int main(int argc, char** argv){
 
       size_t wrote = write(fdPipe,&counter , 1 );
       if(wrote < sizeof(counter)){
-    	  printf("didnt write all\n");
+    	  printf("didnt write all, wrote: %d \n", (int) fdPipe);
     	  return -1;
       }
       if(wrote < 0){
