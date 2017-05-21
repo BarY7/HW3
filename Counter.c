@@ -57,7 +57,7 @@ int main(int argc, char** argv){
       kill(ppid, SIGUSR1);
       size_t wrote = write(fdPipe,&counter , 1 );
       if(wrote < sizeof(counter)){
-    	  printf("didnt write all");
+    	  printf("didnt write all\n");
     	  return -1;
       }
       if(wrote < 0){

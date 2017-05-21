@@ -35,6 +35,10 @@ void my_signal_handler( int signum, siginfo_t* info, void* ptr)
 }
 
 int main(int argc, char** argv){
+	if(argc != 2){
+		printf("Wrong arguments");
+		return -1;
+	}
 	char ccount = argv[1][0];
 	char* filename = argv[2];
 	struct stat sb;
@@ -80,12 +84,12 @@ int main(int argc, char** argv){
 		if(cpid == 0) // child
 		{
 			char *argvv[] = {"Counter.c", argv[1], argv[2] , offset, length, NULL};
-			execv("./Counter.c",argvv);
+			execv("./coun",argvv);
 			printf("execv failed: %s\n", strerror(errno));
 			return -1;
 		}
 		else{
-			sleep(3);//maybe not needed
+			//sleep(3);//maybe not needed
 			continue;
 		}
 	}
