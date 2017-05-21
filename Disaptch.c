@@ -23,12 +23,13 @@ void my_signal_handler( int signum, siginfo_t* info, void* ptr)
     char* pipeName = malloc(14 + sizeof(int));//TODO ok?
     sprintf(pipeName, "//tmp//counter_%d" , (int) sonPid); //TODO double //?
     size_t fdPipe = open(pipeName, O_RDONLY);
-    char* countRead = read(fdPipe,sizeof(int),1);
+    char* cRead = malloc(sizeof(int));
+    int countRead = read(fdPipe,cRead,1);
     if(countRead < 0){
 		printf("Read has failed on the file: %s\n", strerror( errno )); //TODO trouble?
 		return;
     }
-    int amount = atoi(countRead);
+    int amount = atoi(cRead);
     COUNT+= amount;
     return;
 }
